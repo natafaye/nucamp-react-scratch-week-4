@@ -1,25 +1,22 @@
-import logo from './logo.svg';
-import './App.css';
+import { useDispatch, useSelector } from "react-redux"
+import { deleteReview } from "./reviewSlice"
 
-function App() {
+export default function App() {
+  const dispatch = useDispatch()
+
+  const listOfReviews = useSelector( state => state.reviews.reviewList )
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h3>Books</h3>
+      
+      <h3>Reviews</h3>
+      { listOfReviews.map(review => (
+        <div key={review.id}>
+          { review.text }
+          <button onClick={() => dispatch(deleteReview(review.id))}>Delete</button>
+        </div>
+      ))}
     </div>
-  );
+  )
 }
-
-export default App;
