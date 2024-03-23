@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { TEST_MESSAGES } from "./TEST_MESSAGES"
+import { v4 as uuid } from 'uuid'
 
 const messageSlice = createSlice({
     name: 'messages',
@@ -11,7 +12,7 @@ const messageSlice = createSlice({
         // Assume it will be in the payload, make sure later that it is put in the payload
         addMessage: (state, action) => { // state will have the shape of initialState
             const newMessage = {
-                id: 3, // purely so I can give it an id
+                id: uuid(), // generates a new unique UUID
                 ...action.payload // assuming payload is an object with new message data
             }
             state.messageList.push(newMessage)
