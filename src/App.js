@@ -1,22 +1,15 @@
-import { useDispatch, useSelector } from "react-redux"
-import { deleteReview } from "./reviewSlice"
+import Sidebar from "./Sidebar"
+import MessageForm from "./MessageForm"
+import MessageList from "./MessageList"
 
 export default function App() {
-  const dispatch = useDispatch()
-
-  const listOfReviews = useSelector( state => state.reviews.reviewList )
-
-  return (
-    <div>
-      <h3>Books</h3>
-      
-      <h3>Reviews</h3>
-      { listOfReviews.map(review => (
-        <div key={review.id}>
-          { review.text }
-          <button onClick={() => dispatch(deleteReview(review.id))}>Delete</button>
+    return (
+        <div className="main-container">
+            <Sidebar />
+            <div className="main">
+                <MessageList/>
+                <MessageForm/>
+            </div>
         </div>
-      ))}
-    </div>
-  )
+    )
 }
