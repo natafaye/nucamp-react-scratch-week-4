@@ -1,23 +1,34 @@
-import { useSelector } from "react-redux"
-import { selectAllMessages, selectMessageById } from "./messageSlice"
+import { useDispatch, useSelector } from "react-redux"
+import { sendMessage } from "./messageSlice"
 
 export default function MessageList() {
-    const messageList = useSelector( selectAllMessages )
-    // Same as doing this:
-    // const messageList = useSelector( state => state.messages.messageList )
+    const messages = useSelector(state => state.messages.messageList)
 
-    // Using a selector creator
-    const messageWithIdOf0 = useSelector( selectMessageById(0) )
-    // Same as doing this:
-    // const messageWithIdOf0 = useSelector( state => state.messages.messageList.find(message => message.id === 0) )
+    // Always this:
+    // useDispatch is a function that just returns the dispatch function
+    const dispatch = useDispatch()
+
+    const handleAddMessageClick = () => {
+        // actually add the message please
+        const newMessage = {
+            id: 23,
+            text: "I have a cute cat",
+            author: "April",
+            private: false
+        }
+
+        // dispatch an add message action with the payload set to newMessage
+        dispatch(sendMessage(newMessage))
+    }
 
     return (
         <div>
-            {messageList.map(message => (
-                <div key={message.id}>
-                    <p>{message.text}</p>
+            {messages.map((message) => (
+                <div>
+                    {message.author}: {message.text}
                 </div>
             ))}
+            <button onClick={handleAddMessageClick}>Add Message</button>
         </div>
     )
 }

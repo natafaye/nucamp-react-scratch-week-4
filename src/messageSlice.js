@@ -1,42 +1,61 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { TEST_MESSAGES } from "./TEST_MESSAGES"
-import { v4 as uuid } from 'uuid'
+import { createSlice } from '@reduxjs/toolkit'
+import { TEST_MESSAGES } from './TEST_MESSAGES';
+
+// const ultraState = {
+//     messages: { // this slice name comes from the store
+//         messageList: [
+//             {
+//                 id: 0,
+//                 text: "How are you",
+//                 author: "Natalie",
+//                 private: false
+//             },
+//             {
+//                 id: 1,
+//                 text: "I'm not doing well",
+//                 author: "Chad",
+//                 private: true
+//             },
+//         ],
+//         onPrivateMode: false
+//     }
+// }
+
+//ultraState.messages.messageList
 
 const messageSlice = createSlice({
-    name: 'messages',
+    name: "messages",
+    // mini state
     initialState: {
-        messageList: TEST_MESSAGES
+        messageList: TEST_MESSAGES, // starting out with test data for convenience
+        onPrivateMode: false
     },
     reducers: {
-        // The only way to get data to a reducer is through the action payload
-        // Assume it will be in the payload, make sure later that it is put in the payload
-        addMessage: (state, action) => { // state will have the shape of initialState
-            const newMessage = {
-                id: uuid(), // generates a new unique UUID
-                ...action.payload // assuming payload is an object with new message data
-            }
-            state.messageList.push(newMessage)
+        // Mini reducer
+        sendMessage: (state, action) => {
+            // either OPTION 1: Changes the state directly
+            // or OPTION 2: Returns a changed copy of the state
+            // Note: We make an assumption about what the action.payload will be
+
+            // I'm going to assume that action.payload will be an object that's a new message
+            // Note: state will be just this slice of the state (it will have the shape of hte initialState)
+
+            // Option 1:
+            state.messageList.push(action.payload)
+
+            // Option 2:
+            // return {
+            //     ...state,
+            //     messageList: [...state.messageList, action.payload]
+            // }
         }
     }
-})
+});
 
-// messageSlice = { reducer: function, actions: { addMessage: function } }
+// IMPORTANT: sendMessage right here is an Action Creator NOT a Mini Reducer
+// sendMessage will create an action object that when dispatched goes to the sendMessage mini reducer above
+export const { sendMessage } = messageSlice.actions
+// Or I could do this: export const sendMessage = messageSlice.actions.sendMessage
 
-// We're going to import the reducer in the store
+// Export the mega reducer
 export const messageReducer = messageSlice.reducer
-
-// We're going to import the action creators in our components
-export const { addMessage } = messageSlice.actions
-// This is the same as the line above, but without object destructuring
-// export const addMessage = messageSlice.actions.addMessage
-
-
-// Selector
-export const selectAllMessages = state => state.messages.messageList
-
-// Selector creator
-export const selectMessageById = idToSelectBy => state => state.messages.messageList.find(message => message.id === idToSelectBy)
-// Same thing as above line, but as a normal function
-// export const createSelectById = function (idToSelectBy) {
-//     return state => state.messages.messageList.find(message => message.id === idToSelectBy)
-// }
